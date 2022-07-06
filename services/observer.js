@@ -17,8 +17,8 @@ class Observer extends EventEmitter {
           console.log(
             `[${new Date().toLocaleString()}] ${filePath} has been added.`
           );
-          const imgData = fs.readFileSync(filePath, { encoding: 'base64' });
-          const imgBuffer = Buffer.from(imgData, 'base64')
+          const imgData = fs.readFileSync(filePath);
+          const imgBuffer = Buffer.from(imgData)
 
           // emit an event when new file has been added
           this.emit('file-added', {
