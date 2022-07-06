@@ -9,7 +9,7 @@ const processVideo = (fileName) => {
     const baseFodler = uuidv4.v4();
     extractFrames({
         input: `videos/${fileName}`,
-        output: `images/frames/${baseFodler}/screenshot-%i.jpg`,
+        output: `images/frames/screenshot-%i.jpg`,
         timestamps: FRAME_TIMESTAMPS,
     }).then(res => {
         console.log(res);
@@ -33,7 +33,7 @@ const processVideo = (fileName) => {
                 a(promises);
             } 
         });
-        observer.watchFolder(`images/frames/${baseFodler}`);
+        observer.watchFolder(`images/frames`);
     })
 }
 
