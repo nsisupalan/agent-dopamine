@@ -13,7 +13,7 @@ class Observer extends EventEmitter {
         `[${new Date().toLocaleString()}] Watching for folder changes on: ${folder}`
       );
       var watcher = chokidar.watch(folder, { persistent: true });
-      watcher.on('add', async filePath => {
+      watcher.on('add', filePath => {
           console.log(
             `[${new Date().toLocaleString()}] ${filePath} has been added.`
           );
