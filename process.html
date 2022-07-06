@@ -1,0 +1,122 @@
+<html>
+
+<head>
+    <title>Agent Dopamine</title>
+    <script>
+        window.onload = () => {
+            const processBtn = document.getElementById('processBtn');
+            const processImg = document.getElementById('processImg');
+            const processMov = document.getElementById('processMov');
+            const processVideoBtn = document.getElementById('processVideoBtn');
+            const ageElement = document.getElementById('age');
+            const emotionTable = document.getElementById('emotionCotnainer');
+
+            processBtn.addEventListener('click', e => {
+                let formData = new FormData();
+                formData.append('fileName', processImg.value);
+                console.log('Form data', formData, ' img', processImg.value);
+                fetch('/process-img', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fileName: processImg.value
+                    })
+                })
+                    .then(function (response) { return response.json(); })
+                    .then(function (json) {
+                        const face = json[0];
+                        console.log(json, face.AgeRange);
+                        ageElement.innerText = JSON.stringify(face.AgeRange);
+                        let emotionCnt = `<tr><td>Type</td><td>Rank</td></tr>`;
+                        face.Emotions.forEach(e => {
+                            emotionCnt += `<tr><td>${e.Type}</td><td>${e.Confidence}</td></tr>`;
+                        })
+                        const emtCnt = `<table id="emotionTable" style="border: 1px solid #eee; padding: 10px;">
+                                            ${emotionCnt}
+                                        </table>`;
+                        emotionTable.innerHTML += emtCnt;
+                    })
+                    .catch(err => console.error(err));
+            });
+
+            processVideoBtn.addEventListener('click', e => {
+                let formData = new FormData();
+                formData.append('fileName', processMov.value);
+                console.log('Form data', formData, ' Video', processMov.value);
+                fetch('/process-video', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fileName: processMov.value
+                    })
+                })
+                    .then(function (response) { return response.json(); })
+                    .then(function (json) {
+                        json.forEach(ele => {
+                            const face = ele[0];
+                            console.log(ele, face.AgeRange);
+                            ageElement.innerText = JSON.stringify(face.AgeRange);
+                            let emotionCnt = `<tr><td>Type</td><td>Rank</td></tr>`;
+                            face.Emotions.forEach(e => {
+                                emotionCnt += `<tr><td>${e.Type}</td><td>${e.Confidence}</td></tr>`;
+                            })
+                            const emtCnt = `<table id="emotionTable" style="border: 1px solid #eee; padding: 10px;">
+                                            ${emotionCnt}
+                                        </table>`;
+                            emotionTable.innerHTML += emtCnt;
+                        })
+                        
+                    })
+                    .catch(err => console.error(err));
+            });
+        }
+
+        //
+
+    </script>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+    <h1>Agent Dopamine</h1>
+    <div style="width: 100%; margin-bottom: 10px">
+        <a href="index.html" class="btn">Home</a>
+        <a href="sample-img.html" class="btn">Images Samples</a>
+    </div>
+    <form>
+        <br /><br />
+        <fieldset>
+            <legend>Image Processing</legend>
+            <input type="text" name="processImg" id="processImg" value="myImage_1656945412907.jpg" />
+            <input type="button" value="Process Image" id="processBtn" />
+        </fieldset>
+        <fieldset>
+            <legend>Video Processing</legend>
+            <input type="text" name="processMov" id="processMov" value="sad.mp4" />
+            <input type="button" value="Process Video" id="processVideoBtn" />
+        </fieldset>
+        <fieldset>
+            <legend>Result</legend>
+            <table style="border: 1px solid gray;">
+                <tr>
+                    <td>Age</td>
+                    <td><span id='age'></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Emotions</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div id="emotionCotnainer"></div>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</body>
+
+</html>

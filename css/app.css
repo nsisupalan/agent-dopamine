@@ -1,0 +1,13 @@
+a.btn {
+    text-decoration: none;
+}
+.btn {
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    background-color: blue; 
+    color: white;
+    border-radius: 5px;
+}
+.pointer {
+    cursor: pointer;
+}

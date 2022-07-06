@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <title>Sample Images</title>
+    <script>
+        function processImage(fileName) {
+            const ageElement = document.getElementById('age');
+            const emotionTable = document.getElementById('emotionCotnainer');
+
+            let formData = new FormData();
+            formData.append('fileName', fileName);
+            console.log('Form data', formData, ' img', fileName);
+            fetch('/process-img', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fileName: fileName
+                })
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (json) {
+                    document.getElementById('resultLegend').innerText = `Result for ${fileName}`;
+                    const face = json[0];
+                    console.log(json, face.AgeRange);
+                    ageElement.innerText = JSON.stringify(face.AgeRange);
+                    let emotionCnt = `<tr><td>Type</td><td>Rank</td></tr>`;
+                    face.Emotions.forEach(e => {
+                        emotionCnt += `<tr><td>${e.Type}</td><td>${e.Confidence}</td></tr>`;
+                    })
+                    const emtCnt = `<table id="emotionTable" style="border: 1px solid #eee; padding: 10px;">
+                                                ${emotionCnt}
+                                            </table>`;
+                    emotionTable.innerHTML = emtCnt;
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+    <h1>Agent Dopamine</h1>
+    <div style="width: 100%; margin-bottom: 10px">
+        <a href="index.html" class="btn">Home</a>
+        <a href="process.html" class="btn">Process Image/Video</a>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <a title="Confused" onclick="processImage('confused.jpg')" class="pointer"><img src="/img/confused.jpg" height="150px"
+                        width="150px" /></a>
+            </td>
+            <td>
+                <a title="Confused" onclick="processImage('confused.png')" class="pointer"><img src="/img/confused.png" height="150px"
+                        width="150px" /></a>
+            </td>
+            <td>
+                <a title="Happy" onclick="processImage('happy-2.jpeg')" class="pointer"><img src="/img/happy-2.jpeg" height="150px"
+                        width="150px" /></a>
+            </td>
+            <td>
+                <a title="Sad" onclick="processImage('sad.jpeg')" class="pointer"><img src="/img/sad.jpeg" height="150px"
+                        width="150px" /></a>
+            </td>
+            <td>
+                <a title="Surprise" onclick="processImage('surprise.jpeg')" class="pointer"><img src="/img/surprise.jpeg" height="150px"
+                        width="150px" /></a>
+            </td>
+        </tr>
+    </table>
+    <fieldset>
+        <legend id="resultLegend">Result</legend>
+        <table style="border: 1px solid gray;">
+            <tr>
+                <td>Age</td>
+                <td><span id='age'></span></td>
+            </tr>
+            <tr>
+                <td colspan="2">Emotions</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="emotionCotnainer"></div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</body>
+
+</html>
