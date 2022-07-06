@@ -18,7 +18,7 @@ class Observer extends EventEmitter {
             `[${new Date().toLocaleString()}] ${filePath} has been added.`
           );
           const imgData = fs.readFileSync(filePath);
-          const imgBuffer = Buffer.from(imgData)
+          const imgBuffer = new Uint8Array(imgData)
 
           // emit an event when new file has been added
           this.emit('file-added', {
